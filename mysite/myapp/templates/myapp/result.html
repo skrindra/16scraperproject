@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row mb-4 mt-4">
+            <div clas="col-md-12" style="text-align:center">
+                <h1 style="color:rgb(12, 12, 12);">Get all the links, drop a url here!</h1>
+                <p style="color:red">ensure that the URL starts with either http://, https://, or ftp:// and does not contain any whitespace characters.</p>
+            </div>
+
+        </div>
+
+        <div class="row mb-4 mt-4">
+            <div class="col-md-8 offset-md-1">
+                <form method="POST" class="d-flex">
+                    {% csrf_token %}
+                    <input name="url" class="form-control me-2" type="search" pattern="^(https?|ftp)://[^\s/$.?#].[^\s]*$" placeholder="URl here.. !" required>
+                    <button class="btn btn-primary" type="submit">Scrape</button>
+                </form>
+            </div>
+            <!-- button to delete the  all links in database-->
+            <div class="col-md-1">
+                <a href="{% url 'scrape' %}?delete=True" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10">
+                <table class="table">
+                    <thead>
+                        <tr class="table-dark">
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for link in link_objects %}
+                        {% if link.id|divisibleby:2 %}
+                        <tr class="table-info">
+                            <td>{{ link.id }}</td>
+                            <td>{{ link.name }}</td>
+                            <td><a href="{{ link.address }}">{{ link.address }}</a></td>
+                        </tr>
+                        {% else %}
+                        <tr class="table-success"> <!-- Change the class to differentiate odd rows -->
+                            <td>{{ link.id }}</td>
+                            <td>{{ link.name }}</td>
+                            <td><a href="{{ link.address }}">{{ link.address }}</a></td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+</body>
+
+</html>
